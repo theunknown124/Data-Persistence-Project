@@ -72,5 +72,10 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        // Save the player's score
+        string playerName = SaveDataManager.Instance.playerName;
+        // Assuming playerName is set in SaveDataManager
+        SaveDataManager.Instance.AddOrUpdateHighScore(playerName, m_Points);
     }
 }
