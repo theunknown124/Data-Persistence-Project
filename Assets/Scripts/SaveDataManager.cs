@@ -2,16 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using UnityEngine.SocialPlatforms.Impl;
-using System.Linq;
+using System;
 
 public class SaveDataManager : MonoBehaviour
 {
     public static SaveDataManager Instance;
-    public string playerName;
-    public int bestScore;
+    public string currentPlayerName;
+    public int currentPlayerScore;
 
-    public Dictionary<string, int> highScores = new Dictionary<string, int>();
+    private Dictionary<string, int> playerScores = new Dictionary<string, int>();
     
     private void Awake() 
     {
@@ -25,109 +24,44 @@ public class SaveDataManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         LoadPlayerData();
-
-        Debug.Log("Persistent data path: " + Application.persistentDataPath); 
             
     }
 
     class SaveData
     {
-        //public string playerName;
-        //public int bestScore;
-        public List<KeyValuePair<string, int>> highScoresList = new List<KeyValuePair<string, int>>();
-    }
-
-
-    public void AddOrUpdateHighScore(string playerName, int score)
-{
-    if (highScores.ContainsKey(playerName))
-    {
-        // Update the high score if the current score is higher
-        if (score > highScores[playerName])
-        {
-            highScores[playerName] = score;
-            Debug.Log($"Updated score for {playerName}: {score}");
-        }
-    }
-    else
-    {
-        // Add a new entry to the dictionary
-        highScores.Add(playerName, score);
-        Debug.Log($"Added new player {playerName} with score: {score}");
-    }
-
-    SavePlayerData(); // Save the updated dictionary
-}
-
-    public Dictionary<string, int> GetHighScores()
-    {
-        return highScores;
+        public Dictionary<string, int> playerScores;
     }
 
     public void SavePlayerData()
-{
-    // Debug: Check if highScores is populated
-    if (highScores.Count == 0)
     {
-        Debug.LogWarning("highScores dictionary is empty. Nothing to save.");
-        return;
+        //This method will save the player's name and best score
+        SaveData data = new SaveData();
+        data.playerName = playerName;
+        data.bestScore = bestScore;
+        
+        string json = JsonUtility.ToJson(data);
+        
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
 
-    // Create a SaveData object
-    SaveData data = new SaveData();
-    data.highScoresList = highScores.ToList();
-
-    // Debug: Check if highScoresList is populated
-    if (data.highScoresList.Count == 0)
+    public void LoadPlayerData()
     {
-        Debug.LogWarning("highScoresList is empty. Check the dictionary.");
-        return;
-    }
-
-    // Serialize the SaveData object to JSON
-    string json = JsonUtility.ToJson(data);
-
-    // Debug: Check the JSON output
-    Debug.Log("Saving JSON: " + json);
-
-    // Save the JSON to a file
-    string path = Application.persistentDataPath + "/savefile.json";
-    File.WriteAllText(path, json);
-
-    // Debug: Confirm the file was saved
-    Debug.Log("Save file written to: " + path);
-}
-
-public void LoadPlayerData()
-{
-    string path = Application.persistentDataPath + "/savefile.json";
-    if (File.Exists(path))
-    {
-        try
+        //This method will load the player's name and best score
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
             SaveData data = JsonUtility.FromJson<SaveData>(json);
-
-            // Check if highScoresList is null
-            if (data.highScoresList == null)
-            {
-                data.highScoresList = new List<KeyValuePair<string, int>>();
-            }
-
-            // Convert the list to a dictionary
-            highScores = data.highScoresList.ToDictionary(pair => pair.Key, pair => pair.Value);
+            
+            playerName = data.playerName;
+            bestScore = data.bestScore;
         }
-        catch (System.Exception e)
+        else
         {
-            Debug.LogError("Failed to load save data: " + e.Message);
-            highScores = new Dictionary<string, int>(); // Initialize an empty dictionary on error
+            playerName = "Player"; //Default player name if no save data exists
+            bestScore = 0; // Default best score if no save data exists
         }
     }
-    else
-    {
-        highScores = new Dictionary<string, int>(); // Initialize an empty dictionary if no save file exists
-    }
-}
 
     public void DeleteSavedData()
     {
