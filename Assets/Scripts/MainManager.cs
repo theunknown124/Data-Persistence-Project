@@ -17,8 +17,8 @@ public class MainManager : MonoBehaviour
     private int m_Points;
     
     private bool m_GameOver = false;
-    public Text ScoreText;  // Text component for displaying current score
-    public Text ScoreText1;  // Text component for displaying high score
+    public Text CurrentScoreText;  // Text component for displaying current score
+    public Text HighScoreText;  // Text component for displaying high score
     public GameObject GameOverText;  // Text/Panel displayed when the game is over
 
     public Button BacktoMenu; //Button to go back to menu
