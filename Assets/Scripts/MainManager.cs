@@ -10,7 +10,6 @@ public class MainManager : MonoBehaviour
     public int LineCount = 6;
     public Rigidbody Ball;
 
-<<<<<<< Updated upstream
     public Text ScoreText;
     public GameObject GameOverText;
     
@@ -18,7 +17,6 @@ public class MainManager : MonoBehaviour
     private int m_Points;
     
     private bool m_GameOver = false;
-=======
     public Text ScoreText;  // Text component for displaying current score
     public Text ScoreText1;  // Text component for displaying high score
     public GameObject GameOverText;  // Text/Panel displayed when the game is over
@@ -29,7 +27,6 @@ public class MainManager : MonoBehaviour
     private int m_Points;  // Current score points
 
     private bool m_GameOver = false;  // Flag to check if the game is over
->>>>>>> Stashed changes
 
     
     // Start is called before the first frame update
@@ -79,8 +76,6 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
-<<<<<<< Updated upstream
-=======
         if (m_Points > SaveDataManager.Instance.bestScore)
         {
             SaveDataManager.Instance.bestScore = m_Points;
@@ -88,16 +83,15 @@ public class MainManager : MonoBehaviour
             SaveDataManager.Instance.SavePlayerData();
             UpdateHighScoreDisplay();
         }
->>>>>>> Stashed changes
+
     }
 
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
-<<<<<<< Updated upstream
-=======
-        BacktoMenu.gameObject.SetActive(true);
+
+        BackToMenu.gameObject.SetActive(true);
         UpdateHighScoreDisplay();
     }
 
@@ -117,7 +111,6 @@ public class MainManager : MonoBehaviour
     public void BackToMenu()
     {
         SceneManager.LoadScene(0);
->>>>>>> Stashed changes
     }
     
 }
