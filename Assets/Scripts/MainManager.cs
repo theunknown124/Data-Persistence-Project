@@ -10,18 +10,11 @@ public class MainManager : MonoBehaviour
     public int LineCount = 6;
     public Rigidbody Ball;
 
-    public Text ScoreText;
-    public GameObject GameOverText;
-    
-    private bool m_Started = false;
-    private int m_Points;
-    
-    private bool m_GameOver = false;
     public Text CurrentScoreText;  // Text component for displaying current score
     public Text HighScoreText;  // Text component for displaying high score
     public GameObject GameOverText;  // Text/Panel displayed when the game is over
 
-    public Button BacktoMenu; //Button to go back to menu
+    public Button BackToMenuButton; //Button to go back to menu
 
     private bool m_Started = false;  // Flag to check if the game has started
     private int m_Points;  // Current score points
@@ -32,6 +25,8 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        LoadHighScore();
+        HighScoreText.text = $"Best Score : {SaveDataManager.Instance.playerName} : {SaveDataManager.Instance.bestScore}";
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -75,7 +70,7 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        CurrentScoreText.text = $"Score : {m_Points}";
         if (m_Points > SaveDataManager.Instance.bestScore)
         {
             SaveDataManager.Instance.bestScore = m_Points;
@@ -91,7 +86,7 @@ public class MainManager : MonoBehaviour
         m_GameOver = true;
         GameOverText.SetActive(true);
 
-        BackToMenu.gameObject.SetActive(true);
+        BackToMenuButton.gameObject.SetActive(true);
         UpdateHighScoreDisplay();
     }
 
@@ -105,7 +100,7 @@ public class MainManager : MonoBehaviour
     void UpdateHighScoreDisplay()
     {
         // Update UI for score and high score
-        ScoreText.text = $"Score : {m_Points}";
+        CurrentScoreText.text = $"Score : {m_Points}";
     }
 
     public void BackToMenu()
